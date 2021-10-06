@@ -12,10 +12,10 @@ const Countrie = ({ countrie }) => {
     axios
       .get('http://api.weatherstack.com/current', { params })
       .then(response => {
-        // console.log(response);
+        console.log(response);
         setClimate(response.data);
       })
-  }, [])
+  }, [countrie.capital])
 
   return (
     <>
