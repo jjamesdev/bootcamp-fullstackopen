@@ -11,35 +11,50 @@ const App = () => {
   const [showAll, setShowAll] = useState(true);
 
   useEffect(() => {
-    console.log('effect');
+    // console.log('effect');
     axios
       .get('http://localhost:3001/notes')
       .then(response => {
-        console.log('promise fulfilled');
+        // console.log('promise fulfilled');
         setNotes(response.data);
       })
   }, [])
-  console.log('render', notes.length, 'notes');
+  // console.log('render', notes.length, 'notes');
 
   const notesToShow = showAll ? notes : notes.filter(note => note.important);
 
   const addNote = (event) => {
     event.preventDefault();
-    // console.log(')button clicked', event.target);
     const noteObject = {
       content: newNote,
       date: new Date().toISOString(),
       important: Math.random() < 0.5,
-      id: notes.length + 1
     }
 
-    setNotes(notes.concat(noteObject));
-    setNewNote('');
+    axios
+      .post('http://localhost:3001/notes', noteObject)
+      .then(response => {
+        console.log(response);
+        setNotes(notes.concat(response.data));
+        setNewNote('');
+      })
   }
 
   const handleNoteChange = (event) => {
-    console.log(event.target.value);
+    // console.log(event.target.value);
     setNewNote(event.target.value);
+  }
+
+  const toogleImportanceOf = (id) => {
+    console.log(`importance of ${ id } needs to be toogled`);
+    const url = `http://localhost:3001/notes/${ id }`;
+    const note = notes.find(n => n.id === id);
+    const changeNote = { ...note, important: ! note.important };
+    
+    // console.log(note);
+    axios.put(url, changeNote).then(response => {
+        setNotes(notes.map(note => note.id !== id ? note : response.data))
+      })
   }
 
   return (
@@ -51,16 +66,13 @@ const App = () => {
     </button>
     </div>
     <ul>
-    {/*
-      notes.map(
-        note => (
-          <Note key={ note.id } note={ note } />
-        )
-      )
-    */}
     {
       notesToShow.map(note => (
-        <Note key={ note.id } note={ note } />
+        <Note
+          key={ note.id }
+          note={ note }
+          toogleImportance={ () => toogleImportanceOf(note.id) }
+        />
       ))
     }
     </ul>
