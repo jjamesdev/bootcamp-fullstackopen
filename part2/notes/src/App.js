@@ -3,6 +3,7 @@ import './App.css';
 import Note from './components/Note';
 import noteService from './services/notes';
 import Notification from './components/Notification';
+import Footer from './components/Footer';
 
 const App = () => {
 
@@ -92,6 +93,7 @@ const App = () => {
     }/>
     <button type="submit">save</button>
     </form>
+    <Footer />
     </div>
   )
 }
