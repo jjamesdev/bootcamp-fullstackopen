@@ -13,6 +13,7 @@ const App = () => {
     // { name: 'Dan Abramov', number: '12-43-234345' },
     // { name: 'Mary Poppendieck', number: '39-23-6423122' }   // { name: 'Arto Hellas' }
   ]) 
+  const [ filterPersons, setFilterPersons ] = useState([]);
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('');
   const [ newFilter, setNewFilter ] = useState('');
@@ -24,11 +25,9 @@ const App = () => {
       .then(response => {
         // console.log(response);
         setPersons(response.data);
+        setFilterPersons(response.data);
       })
   }, [])
-
-
-
 
   const addPerson = (event) => {
     event.preventDefault();
@@ -64,7 +63,8 @@ const App = () => {
     let filter = persons.filter(
       person => person.name.toLowerCase().includes(event.target.value.toLowerCase())
     );
-    setPersons(filter);
+    // setPersons(filter);
+    setFilterPersons(filter);
   }
 
   return (
@@ -78,7 +78,7 @@ const App = () => {
         valueNumber={ newNumber } handleNumberChange={handleNumberChange}
       />
       <h3>Numbers</h3>
-      <Persons persons={ persons }/>
+      <Persons persons={ filterPersons }/>
     </div>
   )
 }
