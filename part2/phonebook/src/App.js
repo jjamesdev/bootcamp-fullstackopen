@@ -4,6 +4,7 @@ import Filter from './components/Filter';
 import Persons from './components/Persons';
 import PersonForm from './components/PersonForm';
 import personService from './services/persons';
+import Notification from './components/Notification';
 
 
 const App = () => {
@@ -12,11 +13,12 @@ const App = () => {
     // { name: 'Ada Lovelace', number: '39-44-5323523' },
     // { name: 'Dan Abramov', number: '12-43-234345' },
     // { name: 'Mary Poppendieck', number: '39-23-6423122' }   // { name: 'Arto Hellas' }
-  ]) 
+  ])
   const [ filterPersons, setFilterPersons ] = useState([]);
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('');
   const [ newFilter, setNewFilter ] = useState('');
+  const [ objMessage, setMessage ] = useState({ message: null, status: null });
 
   useEffect(() => {
     personService
@@ -40,6 +42,10 @@ const App = () => {
           setNewName('');
           setNewNumber('');
         })
+        .catch(error => {
+          console.log(error);
+          setMessage({ message: `information of '${ value.name }' has already deleted from server`, status: 'error' });
+        })
 
       return;
     }
@@ -52,9 +58,13 @@ const App = () => {
     personService
       .create(personObject)
       .then(response => {
+        setMessage({ message: `Added ${ response.name }`, status: 'new'});
         setFilterPersons(filterPersons.concat(response));
         setNewName('');
         setNewNumber('');
+        setTimeout(() => {
+          setMessage({ message: null, status: null });
+        }, 5000)
       })
   }
 
@@ -83,8 +93,12 @@ const App = () => {
       personService
         .destroy(person.id)
         .then(response => {
-          // console.log(response);
+          console.log(response);
           setFilterPersons(filterPersons.filter(person => person.id !== id ))
+        })
+        .catch(error => {
+          console.log(error);
+          setMessage({ message: `information of '${ person.name }' has already deleted from server`, status: 'error' });
         })
     }
   }
@@ -92,6 +106,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification config={ objMessage } />
       <Filter value={ newFilter } handleChange={ handleFilterChange }/>
       <h3>add a new</h3>
       <PersonForm 
