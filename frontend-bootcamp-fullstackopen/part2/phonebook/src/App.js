@@ -32,6 +32,7 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault();
     let value = persons.find(person => person.name === newName);
+    // console.log('FIND', value)
     if (value && window.confirm(`${ value.name  } is already added to phonebook, replace the old number with a new one?`)) {
       let personObject = {...value, number: newNumber};
       personService
@@ -43,8 +44,13 @@ const App = () => {
           setNewNumber('');
         })
         .catch(error => {
-          console.log(error);
-          setMessage({ message: `information of '${ value.name }' has already deleted from server`, status: 'error' });
+          // console.log(error);
+          // console.log(error.response.data.error)
+          // setMessage({ message: `information of '${ value.name }' has already deleted from server`, status: 'error' });
+          setMessage({ message: `${ error.response.data.error  }`, status: 'error' });
+          setTimeout(() => {
+            setMessage({ message: null, status: null });
+          }, 5000)
         })
 
       return;
@@ -62,6 +68,12 @@ const App = () => {
         setFilterPersons(filterPersons.concat(response));
         setNewName('');
         setNewNumber('');
+        setTimeout(() => {
+          setMessage({ message: null, status: null });
+        }, 5000)
+      }).catch(error => {
+        // console.log(error.response.data.error)
+        setMessage({ message: `${ error.response.data.error }`, status: 'error' });
         setTimeout(() => {
           setMessage({ message: null, status: null });
         }, 5000)
@@ -109,7 +121,7 @@ const App = () => {
       <Notification config={ objMessage } />
       <Filter value={ newFilter } handleChange={ handleFilterChange }/>
       <h3>add a new</h3>
-      <PersonForm 
+      <PersonForm
         submit={ addPerson }
         valueName={ newName } handleNameChange={handleNameChange}
         valueNumber={ newNumber } handleNumberChange={handleNumberChange}

@@ -1,0 +1,33 @@
+# GET all persons
+GET http://localhost:3001/api/persons
+Content-Type: application/json
+
+###
+# Get person by id
+GET http://localhost:3001/api/persons/616f9f6de3979cbb7e5d936d
+Content-Type: application/json
+
+###
+# Update person by id
+PUT http://localhost:3001/api/persons/616f9f6de3979cbb7e5d936d
+Content-Type: application/json
+
+{
+  "name": "MI_NUMBER",
+  "number": "00101010101010"
+}
+
+###
+# unknown Endpoint
+GET http://localhost:3001/api/persons/test/nuevo
+
+###
+# Create new person
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "name": "MI_NUMBER",
+  "number": "9999999999999"
+}
+

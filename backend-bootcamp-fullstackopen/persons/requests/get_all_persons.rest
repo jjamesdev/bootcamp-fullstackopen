@@ -1,0 +1,14 @@
+http://localhost:3001
+GET /api/persons
+# GET /api/persons/1
+
+POST /api/persons
+{
+  "name": "hola mundo",
+  "number": "01010101010101"
+}
+
+# server
+# https://radiant-woodland-19674.herokuapp.com
+# GET /api/persons
+# GET /api/persons/3
